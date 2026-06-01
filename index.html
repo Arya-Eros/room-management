@@ -236,7 +236,7 @@ ol.steps li{padding-left:4px}
 <body>
 
 <!-- ══ SETUP SCREEN ══ -->
-<div class="screen active" id="setupScreen">
+<div class="screen" id="setupScreen">
   <div class="card card-setup">
     <h2>🏨 Connect Your Database</h2>
     <p class="sub">One-time setup. Run the SQL below in Supabase, then enter your credentials.</p>
@@ -295,7 +295,7 @@ CREATE POLICY "staff" ON activity_log FOR ALL TO authenticated USING (true) WITH
 </div>
 
 <!-- ══ LOGIN SCREEN ══ -->
-<div class="screen" id="loginScreen">
+<div class="screen active" id="loginScreen">
   <div class="card card-login">
     <div class="logo">🏨</div>
     <h2>Staff Login</h2>
@@ -535,6 +535,10 @@ const ROOMS = [
   {id:12, name:'Ursuala Hillside Room 2',    category:'Ursuala', type:'Hillside',     price:4800,  emoji:'⛰', max_guests:2},
   {id:13, name:'One Uptown Residence (OUR)', category:'OUR',     type:'2BR Apartment',price:12000, emoji:'🏙', max_guests:6},
 ];
+
+// ── HARDCODED SUPABASE CREDENTIALS ──────────────────────────────────────────
+const SB_URL = 'https://tssksynbdcpgvkyffssf.supabase.co';
+const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRzc2tzeW5iZGNwZ3ZreWZmc3NmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAzMTQwNjYsImV4cCI6MjA5NTg5MDA2Nn0.oVbVvzEgzlsAdOyCD8OPRLzGNqcvF2cCKUWMsl2mlt8';
 
 // ── APP STATE ─────────────────────────────────────────────────────────────────
 let rooms = [], bookings = [], log = [];
@@ -1055,15 +1059,10 @@ function toast(msg, isErr=false){
 
 // ── INIT ──────────────────────────────────────────────────────────────────────
 (async () => {
-  const url = localStorage.getItem('sb_url') || '';
-  const key = localStorage.getItem('sb_key') || '';
-  if (url && key) {
-    sb = createClient(url, key);
-    const restored = await tryRestore();
-    if (!restored) showScreen('login');
-  } else {
-    showScreen('setup');
-  }
+  // Credentials are hardcoded — skip setup screen on all devices
+  sb = createClient(SB_URL, SB_KEY);
+  const restored = await tryRestore();
+  if (!restored) showScreen('login');
 })();
 </script>
 </body>
